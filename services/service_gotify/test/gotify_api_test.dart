@@ -153,6 +153,33 @@ void main() {
       throwsA(isA<NetworkAuthException>()),
     );
   });
+
+  test('application names are cached after success and retried after failure',
+      () async {
+    int calls = 0;
+    final _Adapter adapter = _Adapter((RequestOptions _) {
+      calls++;
+      if (calls == 1) return ResponseBody.fromString('', 500);
+      return ResponseBody.fromString(
+        jsonEncode(<Map<String, Object>>[
+          <String, Object>{'id': 3, 'name': 'Backups'},
+        ]),
+        200,
+        headers: <String, List<String>>{
+          Headers.contentTypeHeader: <String>[Headers.jsonContentType],
+        },
+      );
+    });
+    final GotifyAppNames names = GotifyAppNames(
+      () async => Dio(BaseOptions(baseUrl: 'http://gotify.test/'))
+        ..httpClientAdapter = adapter,
+    );
+
+    expect(await names.load(), isEmpty);
+    expect(await names.load(), <int, String>{3: 'Backups'});
+    expect(await names.load(), <int, String>{3: 'Backups'});
+    expect(calls, 2);
+  });
 }
 
 class _Adapter implements HttpClientAdapter {

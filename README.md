@@ -45,6 +45,15 @@ external URLs.
 - **Reverse-proxy friendly.** Global and per-instance custom HTTP
   headers (Authelia / Cloudflare Access style) ride every request. See
   [Behind a reverse proxy](docs/REVERSE_PROXY.md).
+- **Gotify notifications.** Direct WebSocket delivery while Atrium is open,
+  with reconnect backoff and paginated missed-message recovery. On Android,
+  enable **Settings > Gotify notifications > Background notifications** to
+  keep receiving messages in a foreground service with an ongoing connection
+  notification. This uses battery; Android battery restrictions can interrupt
+  delivery. Reopen Atrium after a device restart, force-stop, or system process
+  termination. Only the active profile's servers are connected. The first
+  connection skips existing messages; later connections recover messages since
+  the last saved message id. iOS delivery is foreground-only.
 - **Hardware-backed credentials.** API keys live in the Android Keystore
   via `flutter_secure_storage`. Optional biometric unlock on launch.
   Profiles export/import as JSON (including WOL devices and headers).

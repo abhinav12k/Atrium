@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'src/custom_theme_providers.dart';
+import 'src/gotify_alerts_listener.dart';
 import 'src/preferences.dart';
 import 'src/router.dart';
 import 'src/share_intake/torrent_share_listener.dart';
@@ -26,6 +27,7 @@ class AtriumApp extends ConsumerWidget {
     final String? fontFamily =
         ref.watch(preferencesProvider.select((Preferences p) => p.fontFamily));
     final GoRouter router = ref.watch(routerProvider);
+    ref.watch(gotifyAlertsListenerProvider);
 
     // Mirror the active profile's global headers into the networking layer
     // so every instance request carries them. Writes are guarded by a map

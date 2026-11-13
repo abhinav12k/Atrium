@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../custom_theme_providers.dart';
 import '../external_links.dart';
+import '../gotify_alerts_listener.dart';
 import '../preferences.dart';
 import '../profile_io.dart';
 import '../update_check/app_version.dart';
@@ -137,6 +138,38 @@ class SettingsScreen extends ConsumerWidget {
             onChanged: controller.setBiometricEnabled,
           ),
           const Divider(),
+          if (Platform.isAndroid) ...<Widget>[
+            const _SectionHeader('Gotify notifications'),
+            SwitchListTile(
+              secondary: const Icon(Icons.notifications_active_outlined),
+              title: const Text('Background notifications'),
+              subtitle: const Text(
+                'Keep a connection to Gotify while Atrium is in the background. '
+                'Shows a persistent connection notification and uses battery. '
+                'Reopen Atrium after a force-stop or device restart.',
+              ),
+              value: prefs.gotifyBackgroundNotifications,
+              onChanged: (bool enabled) async {
+                try {
+                  await controller.setGotifyBackgroundNotifications(enabled);
+                } on Exception {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Unable to save notification settings.'),
+                      ),
+                    );
+                  }
+                }
+              },
+            ),
+            if (ref.watch(gotifyDeliveryStatusProvider) case final String status)
+              ListTile(
+                leading: const Icon(Icons.sensors),
+                title: Text(status),
+              ),
+            const Divider(),
+          ],
           const _SectionHeader('Network'),
           ListTile(
             leading: const Icon(Icons.bolt_outlined),

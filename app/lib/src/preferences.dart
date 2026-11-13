@@ -33,6 +33,7 @@ class Preferences {
     this.customImageColorsCsv,
     this.calendarShowUnmonitored = false,
     this.calendarListView = false,
+    this.gotifyBackgroundNotifications = false,
   });
 
   final ThemeMode themeMode;
@@ -51,6 +52,8 @@ class Preferences {
   /// Whether the calendar renders in list view rather than monthly grid view.
   final bool calendarListView;
 
+  final bool gotifyBackgroundNotifications;
+
   Preferences copyWith({
     ThemeMode? themeMode,
     bool? biometricEnabled,
@@ -62,6 +65,7 @@ class Preferences {
     String? Function()? customImageColorsCsv,
     bool? calendarShowUnmonitored,
     bool? calendarListView,
+    bool? gotifyBackgroundNotifications,
   }) =>
       Preferences(
         themeMode: themeMode ?? this.themeMode,
@@ -80,6 +84,8 @@ class Preferences {
         calendarShowUnmonitored:
             calendarShowUnmonitored ?? this.calendarShowUnmonitored,
         calendarListView: calendarListView ?? this.calendarListView,
+        gotifyBackgroundNotifications:
+            gotifyBackgroundNotifications ?? this.gotifyBackgroundNotifications,
       );
 }
 
@@ -107,6 +113,7 @@ class PreferencesController extends Notifier<Preferences> {
   static const String _calendarShowUnmonitoredKey =
       'pref.calendarShowUnmonitored';
   static const String _calendarListViewKey = 'pref.calendarListView';
+  static const String _gotifyBackgroundKey = 'pref.gotifyBackgroundNotifications';
 
   Box<String> get _box => ref.read(settingsBoxProvider);
 
@@ -142,12 +149,18 @@ class PreferencesController extends Notifier<Preferences> {
       calendarShowUnmonitored:
           _box.get(_calendarShowUnmonitoredKey) == 'true',
       calendarListView: _box.get(_calendarListViewKey) == 'true',
+      gotifyBackgroundNotifications: _box.get(_gotifyBackgroundKey) == 'true',
     );
   }
 
   Future<void> setCalendarListView(bool listView) async {
     await _box.put(_calendarListViewKey, '$listView');
     state = state.copyWith(calendarListView: listView);
+  }
+
+  Future<void> setGotifyBackgroundNotifications(bool enabled) async {
+    await _box.put(_gotifyBackgroundKey, '$enabled');
+    state = state.copyWith(gotifyBackgroundNotifications: enabled);
   }
 
   Future<void> setCalendarShowUnmonitored(bool show) async {

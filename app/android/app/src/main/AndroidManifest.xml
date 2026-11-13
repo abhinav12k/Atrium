@@ -5,6 +5,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!-- Optional biometric unlock (opt-in, gated in-app). -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:label="${appName}"
@@ -13,6 +17,18 @@
         android:usesCleartextTraffic="true"
         android:allowBackup="false"
         android:fullBackupContent="false">
+        <meta-data
+            android:name="app.atrium.gotify_notification_icon"
+            android:resource="@drawable/ic_gotify_notification"/>
+        <service
+            android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
+            android:exported="false"
+            android:stopWithTask="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="User-enabled persistent WebSocket connection to self-hosted Gotify servers for real-time message notifications."/>
+        </service>
         <!-- usesCleartextTraffic: self-hosted LAN services are commonly plain
              http:// on a private IP. allowBackup=false keeps credential
              material out of cloud/adb backups. -->
