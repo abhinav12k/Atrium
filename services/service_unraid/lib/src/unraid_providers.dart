@@ -1,9 +1,11 @@
 import 'package:core_models/core_models.dart';
 import 'package:core_networking/core_networking.dart';
+import 'package:core_storage/core_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 import 'models/unraid_models.dart';
+import 'ssh/unraid_ssh_config.dart';
 import 'unraid_client.dart';
 
 /// Which tab is showing, per instance.
@@ -32,6 +34,11 @@ final unraidClientProvider =
     FutureProvider.autoDispose.family<UnraidClient, Instance>(
   (Ref ref, Instance instance) async =>
       UnraidClient(await ref.watch(instanceDioProvider(instance).future)),
+);
+
+/// SSH login details per server, kept in secure storage.
+final unraidSshStoreProvider = Provider<UnraidSshStore>(
+  (Ref ref) => UnraidSshStore(AtriumSecureStorage()),
 );
 
 /// Array state and disks, polled while watched.

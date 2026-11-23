@@ -35,6 +35,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
 
     // The Android Gradle Plugin otherwise writes an encrypted list of the
@@ -118,6 +119,11 @@ kotlin {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    // Required by flutter_local_notifications for core library desugaring.
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
 
 // F-Droid's version code scheme for split APKs, which every Flutter app in
