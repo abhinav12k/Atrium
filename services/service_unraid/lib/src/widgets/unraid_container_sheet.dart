@@ -9,8 +9,6 @@ import '../models/unraid_models.dart';
 import '../unraid_client.dart';
 import '../unraid_providers.dart';
 import 'unraid_common.dart';
-import 'unraid_container_shell_screen.dart';
-import 'unraid_ssh_settings_dialog.dart';
 
 /// Everything about one container, and everything that can be done to it.
 ///
@@ -211,8 +209,6 @@ class _ContainerSheetState extends ConsumerState<_ContainerSheet> {
         ),
         const SizedBox(height: Insets.lg),
         _Actions(container: c, busy: _busy, run: _run),
-        const SizedBox(height: Insets.md),
-        _SshSection(instance: widget.instance, container: c),
         if (c.isOrphaned) ...<Widget>[
           const SizedBox(height: Insets.md),
           Text(
@@ -241,43 +237,6 @@ class _ContainerSheetState extends ConsumerState<_ContainerSheet> {
               onTap: () => _open(url),
             ),
         ],
-      ],
-    );
-  }
-}
-
-/// Opens a shell in the container over SSH, or sets up the SSH login.
-class _SshSection extends StatelessWidget {
-  const _SshSection({required this.instance, required this.container});
-
-  final Instance instance;
-  final UnraidContainer container;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: container.isRunning
-                ? () => openUnraidContainerShell(
-                      context,
-                      instance: instance,
-                      container: container,
-                    )
-                : null,
-            icon: const Icon(Icons.terminal_rounded),
-            label: const Text('Open shell'),
-          ),
-        ),
-        const SizedBox(width: Insets.sm),
-        IconButton(
-          tooltip: 'SSH settings',
-          icon: const Icon(Icons.key_rounded),
-          color: theme.colorScheme.onSurfaceVariant,
-          onPressed: () => showUnraidSshSettings(context, instance: instance),
-        ),
       ],
     );
   }
